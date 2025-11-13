@@ -41,56 +41,88 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
   };
 
   return (
-    <div className="flex-1 bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Flashcards</h2>
+    <div className="flex-1 p-8 overflow-y-auto animate-fade-in">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              🎴 Flashcards
+            </h2>
+            <p className="text-gray-600 mt-2">Master your knowledge with spaced repetition</p>
+          </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="btn-primary flex items-center gap-2"
           >
-            + New Flashcard
+            <span>✨</span>
+            <span>New Flashcard</span>
           </button>
         </div>
 
+        {/* Stats Bar */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="glass-card rounded-2xl p-6 border border-blue-100">
+            <div className="text-3xl mb-2">📚</div>
+            <div className="text-2xl font-bold text-gray-800">{flashcardsList.length}</div>
+            <div className="text-sm text-gray-600">Total Cards</div>
+          </div>
+          <div className="glass-card rounded-2xl p-6 border border-green-100">
+            <div className="text-3xl mb-2">✅</div>
+            <div className="text-2xl font-bold text-gray-800">
+              {flashcardsList.filter(f => f.repetitions > 0).length}
+            </div>
+            <div className="text-sm text-gray-600">Reviewed</div>
+          </div>
+          <div className="glass-card rounded-2xl p-6 border border-purple-100">
+            <div className="text-3xl mb-2">🔥</div>
+            <div className="text-2xl font-bold text-gray-800">
+              {flashcardsList.filter(f => f.nextReview <= Date.now()).length}
+            </div>
+            <div className="text-sm text-gray-600">Due Today</div>
+          </div>
+        </div>
+
+        {/* Create Form */}
         {showForm && (
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h3 className="text-lg font-semibold mb-4">Create New Flashcard</h3>
-            <div className="space-y-4">
+          <div className="card mb-8 p-8 animate-slide-up">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800">✨ Create New Flashcard</h3>
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Front (Question)
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <span>🎯</span> Front (Question)
                 </label>
                 <input
                   type="text"
                   value={newFront}
                   onChange={(e) => setNewFront(e.target.value)}
-                  placeholder="Enter question"
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="What do you want to remember?"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Back (Answer)
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <span>💡</span> Back (Answer)
                 </label>
                 <input
                   type="text"
                   value={newBack}
                   onChange={(e) => setNewBack(e.target.value)}
-                  placeholder="Enter answer"
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="The answer or explanation"
+                  className="input-field"
                 />
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   onClick={handleCreate}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                  className="btn-success flex items-center gap-2"
                 >
-                  Create
+                  <span>🎉</span>
+                  <span>Create Flashcard</span>
                 </button>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+                  className="btn-secondary"
                 >
                   Cancel
                 </button>
@@ -99,35 +131,67 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
           </div>
         )}
 
+        {/* Flashcards List */}
         <div className="space-y-4">
           {flashcardsList.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No flashcards yet. Create one or generate from notes!</p>
+            <div className="text-center py-20 glass-card rounded-3xl animate-scale-in">
+              <div className="text-6xl mb-6">🎴</div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-3">No Flashcards Yet</h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Create flashcards manually or generate them from your notes using the :: syntax
+              </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="btn-primary inline-flex items-center gap-2"
+              >
+                <span>✨</span>
+                <span>Create Your First Flashcard</span>
+              </button>
             </div>
           ) : (
-            flashcardsList.map((flashcard) => (
-              <div key={flashcard.id} className="bg-white p-6 rounded-lg shadow">
+            flashcardsList.map((flashcard, index) => (
+              <div
+                key={flashcard.id}
+                className="card p-6 hover:scale-[1.01] transition-transform animate-slide-up"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="mb-4">
-                      <div className="text-sm text-gray-500 mb-1">Front</div>
-                      <div className="text-lg font-medium">{flashcard.front}</div>
+                    <div className="grid grid-cols-2 gap-6 mb-4">
+                      <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
+                        <div className="text-xs font-semibold text-blue-600 mb-2 flex items-center gap-1">
+                          <span>❓</span> QUESTION
+                        </div>
+                        <div className="text-lg font-semibold text-gray-800">{flashcard.front}</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4">
+                        <div className="text-xs font-semibold text-green-600 mb-2 flex items-center gap-1">
+                          <span>✅</span> ANSWER
+                        </div>
+                        <div className="text-lg font-medium text-gray-800">{flashcard.back}</div>
+                      </div>
                     </div>
-                    <div className="mb-4">
-                      <div className="text-sm text-gray-500 mb-1">Back</div>
-                      <div className="text-lg">{flashcard.back}</div>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span>Created: {formatDate(flashcard.createdAt)}</span>
-                      <span className="font-medium">{getDaysUntilReview(flashcard.nextReview)}</span>
-                      <span>Repetitions: {flashcard.repetitions}</span>
+                    <div className="flex items-center gap-6 text-sm">
+                      <span className="flex items-center gap-1 text-gray-600">
+                        <span>📅</span> {formatDate(flashcard.createdAt)}
+                      </span>
+                      <span className={`flex items-center gap-1 font-semibold px-3 py-1 rounded-full ${
+                        flashcard.nextReview <= Date.now()
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        <span>⏰</span> {getDaysUntilReview(flashcard.nextReview)}
+                      </span>
+                      <span className="flex items-center gap-1 text-gray-600">
+                        <span>🔁</span> {flashcard.repetitions} reviews
+                      </span>
                     </div>
                   </div>
                   <button
                     onClick={() => onDeleteFlashcard(flashcard.id)}
-                    className="text-red-500 hover:text-red-700 ml-4"
+                    className="btn-danger ml-6"
                   >
-                    Delete
+                    🗑️ Delete
                   </button>
                 </div>
               </div>
