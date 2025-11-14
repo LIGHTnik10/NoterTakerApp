@@ -65,16 +65,16 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ note, onSave, onCreateFl
   if (!note && !title && !content) {
     return (
       <div className="flex-1 flex items-center justify-center p-8 animate-fade-in">
-        <div className="text-center max-w-md glass-card rounded-3xl p-12">
-          <div className="text-6xl mb-6 animate-scale-in">✍️</div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+        <div className="text-center max-w-lg glass-card rounded-3xl p-16">
+          <div className="text-7xl mb-8 animate-scale-in">✍️</div>
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
             Start Creating
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-slate-400 text-lg mb-8 leading-relaxed">
             Select a note from the sidebar or create a new one to begin your learning journey
           </p>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 text-sm text-gray-600">
-            <span className="font-semibold">💡 Pro Tip:</span> Use the <code className="bg-white px-2 py-1 rounded text-xs font-mono">::</code> syntax to create flashcards!
+          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-2xl p-6 text-sm text-slate-300 border border-indigo-500/20">
+            <span className="font-semibold text-indigo-300">💡 Pro Tip:</span> Use the <code className="bg-slate-800 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-mono font-bold">::</code> syntax to create flashcards instantly!
           </div>
         </div>
       </div>
@@ -82,50 +82,50 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ note, onSave, onCreateFl
   }
 
   return (
-    <div className="flex-1 flex flex-col animate-fade-in m-6 mr-6">
+    <div className="flex-1 flex flex-col animate-fade-in p-8">
       <div className="glass-card rounded-3xl shadow-2xl flex flex-col h-full overflow-hidden">
         {/* Title Section */}
-        <div className="border-b border-gray-200 p-6 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="border-b border-slate-700/50 p-8 bg-gradient-to-r from-slate-800/50 to-slate-800/30">
           <input
             type="text"
             placeholder="✨ Untitled Note"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-3xl font-bold outline-none bg-transparent placeholder-gray-400 text-gray-800"
+            className="w-full text-4xl font-bold outline-none bg-transparent placeholder-slate-500 text-slate-100"
           />
-          <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-            <span className="flex items-center gap-1">
-              📅 {new Date().toLocaleDateString()}
+          <div className="flex items-center gap-6 mt-4 text-sm text-slate-400">
+            <span className="flex items-center gap-2 font-medium">
+              📅 {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2 font-medium">
               📊 {content.length} characters
             </span>
             {flashcardCount > 0 && (
-              <span className="flex items-center gap-1 text-amber-600 font-semibold">
-                🎴 {flashcardCount} flashcard{flashcardCount !== 1 ? 's' : ''} found
+              <span className="flex items-center gap-2 text-amber-400 font-semibold">
+                🎴 {flashcardCount} flashcard{flashcardCount !== 1 ? 's' : ''} detected
               </span>
             )}
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 p-6 overflow-hidden">
+        <div className="flex-1 p-8 overflow-hidden">
           <textarea
             placeholder="Start writing your notes here...
 
 💡 Quick Tip: Use the :: syntax to create flashcards
-Example: What is the capital of France? :: Paris"
+Example: What is React? :: A JavaScript library for building user interfaces"
             value={content}
             onChange={handleContentChange}
-            className="w-full h-full outline-none resize-none text-lg leading-relaxed text-gray-700 placeholder-gray-400 bg-transparent"
+            className="w-full h-full outline-none resize-none text-lg leading-relaxed text-slate-200 placeholder-slate-500 bg-transparent"
             style={{ fontFamily: 'inherit' }}
           />
         </div>
 
         {/* Action Bar */}
-        <div className="border-t border-gray-200 p-6 bg-gradient-to-r from-gray-50 to-blue-50">
+        <div className="border-t border-slate-700/50 p-8 bg-slate-800/30">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={handleSave}
                 className="btn-primary flex items-center gap-2"
@@ -145,8 +145,8 @@ Example: What is the capital of France? :: Paris"
             </div>
 
             {flashcardCount > 0 && (
-              <div className="bg-gradient-to-r from-yellow-400 to-amber-500 text-white px-5 py-2 rounded-xl font-semibold shadow-lg animate-pulse">
-                🌟 {flashcardCount} ready to create!
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-amber-500/30 animate-pulse">
+                ⚡ {flashcardCount} ready!
               </div>
             )}
           </div>

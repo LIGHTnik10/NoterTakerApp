@@ -23,18 +23,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const notesList = Object.values(notes).sort((a, b) => b.updatedAt - a.updatedAt);
 
   return (
-    <div className="w-80 bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white flex flex-col shadow-2xl">
+    <div className="w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-white border-opacity-10">
+      <div className="p-6 border-b border-slate-800">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-900/50">
             <span className="text-2xl">🧠</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               RemNote
             </h1>
-            <p className="text-xs text-gray-400">Smart Learning</p>
+            <p className="text-xs text-slate-400 font-medium">Smart Learning Platform</p>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="px-4 py-3">
             <button
               onClick={onNewNote}
-              className="w-full px-5 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+              className="btn-primary w-full flex items-center justify-center gap-2"
             >
               <span className="text-xl">✨</span>
               <span>New Note</span>
@@ -86,38 +86,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Notes List */}
           <div className="flex-1 overflow-y-auto px-4 pb-4">
-            <div className="text-xs font-semibold text-gray-400 mb-2 px-1">
-              RECENT NOTES
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 px-1">
+              Recent Notes
             </div>
             <div className="space-y-2">
               {notesList.length === 0 ? (
-                <div className="text-center text-gray-400 py-12 animate-fade-in">
-                  <div className="text-4xl mb-3">📭</div>
-                  <div className="text-sm">No notes yet</div>
-                  <div className="text-xs mt-1">Create your first note!</div>
+                <div className="text-center text-slate-400 py-16 animate-fade-in">
+                  <div className="text-5xl mb-4 opacity-50">📭</div>
+                  <div className="text-sm font-medium">No notes yet</div>
+                  <div className="text-xs mt-2 text-slate-500">Click the button above to start</div>
                 </div>
               ) : (
                 notesList.map((note) => (
                   <button
                     key={note.id}
                     onClick={() => onSelectNote(note.id)}
-                    className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 group ${
+                    className={`w-full text-left px-4 py-3.5 rounded-xl transition-all duration-300 group ${
                       selectedNoteId === note.id
-                        ? 'bg-white bg-opacity-20 shadow-lg ring-2 ring-white ring-opacity-30'
-                        : 'bg-white bg-opacity-5 hover:bg-opacity-10'
+                        ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 shadow-lg ring-2 ring-indigo-500/30'
+                        : 'bg-slate-800/40 hover:bg-slate-800/60 hover:shadow-md'
                     }`}
                   >
-                    <div className="flex items-start gap-2">
-                      <span className="text-lg mt-0.5">📄</span>
+                    <div className="flex items-start gap-3">
+                      <span className="text-xl mt-0.5 opacity-70">📄</span>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold truncate group-hover:text-blue-200 transition-colors">
+                        <div className="font-semibold truncate text-slate-100 group-hover:text-indigo-300 transition-colors">
                           {note.title}
                         </div>
-                        <div className="text-xs text-gray-400 truncate mt-1">
-                          {note.content.substring(0, 60)}
+                        <div className="text-xs text-slate-400 truncate mt-1.5 line-clamp-2">
+                          {note.content.substring(0, 80)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {new Date(note.updatedAt).toLocaleDateString()}
+                        <div className="text-xs text-slate-500 mt-2 font-medium">
+                          {new Date(note.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </div>
                       </div>
                     </div>
@@ -130,13 +130,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       {/* Footer */}
-      <div className="p-4 border-t border-white border-opacity-10 text-center">
-        <div className="text-xs text-gray-400">
-          {Object.keys(notes).length} notes • {Object.keys(notes).reduce((acc, id) => {
+      <div className="p-4 border-t border-slate-800 text-center bg-slate-900/50">
+        <div className="text-xs text-slate-400 font-medium">
+          <span className="text-indigo-400 font-semibold">{Object.keys(notes).length}</span> notes • <span className="text-purple-400 font-semibold">{Object.keys(notes).reduce((acc, id) => {
             const content = notes[id].content;
             const matches = content.match(/(.+?)::\s*(.+)/g);
             return acc + (matches ? matches.length : 0);
-          }, 0)} flashcards
+          }, 0)}</span> flashcards
         </div>
       </div>
     </div>
