@@ -1,32 +1,75 @@
-import React, { useState } from 'react';
-import { Flashcard } from '../types';
-import { ReviewQuality } from '../utils/spacedRepetition';
+import React, { useState } from "react";
+import { Flashcard, UserSettings } from "../types";
+import { ReviewRating } from "../utils/fsrs";
 
 interface FlashcardReviewProps {
   flashcards: Flashcard[];
-  onReview: (flashcardId: string, quality: ReviewQuality) => void;
+  onReview: (flashcardId: string, rating: ReviewRating) => void;
   onFinish: () => void;
+  settings: UserSettings;
+  dailyReviewed: number;
+  streak: number;
 }
 
 export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
   flashcards,
   onReview,
   onFinish,
+  settings,
+  dailyReviewed,
+  streak,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
 
   if (flashcards.length === 0) {
+    const goalMet = dailyReviewed >= settings.dailyGoal;
+
     return (
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 animate-fade-in">
         <div className="text-center max-w-2xl glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-16 animate-scale-in border border-green-500/20">
-          <div className="text-6xl sm:text-8xl mb-6 sm:mb-8">🎉</div>
+          <div className="text-6xl sm:text-8xl mb-6 sm:mb-8">{goalMet ? "🎉" : "✨"}</div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4 sm:mb-6">
-            All Caught Up!
+            {goalMet ? "Goal Achieved!" : "All Caught Up!"}
           </h2>
           <p className="text-slate-300 text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 leading-relaxed">
-            Amazing work! You've reviewed all your flashcards. Keep up the great learning!
+            {goalMet
+              ? `Amazing work! You've reviewed ${dailyReviewed} cards today and met your daily goal!`
+              : "You've reviewed all your due flashcards. Keep up the great learning!"}
           </p>
+
+          {/* Streak Display */}
+          {streak > 0 && (
+            <div className="mb-8 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-2xl p-6">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <span className="text-5xl streak-fire">🔥</span>
+                <span className="text-6xl font-black text-orange-400">
+                  {streak}
+                </span>
+              </div>
+              <div className="text-orange-300 font-bold text-lg">
+                Day Streak!
+              </div>
+            </div>
+          )}
+
+          {/* Daily Progress */}
+          <div className="mb-8 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-2xl p-6">
+            <div className="text-sm text-slate-400 mb-3">Daily Progress</div>
+            <div className="relative w-full bg-slate-800 rounded-full h-4 mb-3 overflow-hidden border border-slate-700">
+              <div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-500 shadow-lg"
+                style={{
+                  width: `${Math.min((dailyReviewed / settings.dailyGoal) * 100, 100)}%`,
+                }}
+              />
+            </div>
+            <div className="text-slate-300 font-bold">
+              {dailyReviewed} / {settings.dailyGoal} cards
+            </div>
+          </div>
+
           <button
             onClick={onFinish}
             className="btn-primary inline-flex items-center gap-2 w-full sm:w-auto justify-center"
@@ -40,10 +83,15 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
   }
 
   const currentCard = flashcards[currentIndex];
-  const progress = ((currentIndex) / flashcards.length) * 100;
+  const progress = (currentIndex / flashcards.length) * 100;
+  const totalReviewed = dailyReviewed + currentIndex;
 
-  const handleReview = (quality: ReviewQuality) => {
-    onReview(currentCard.id, quality);
+  const handleReview = (rating: ReviewRating) => {
+    if (rating >= ReviewRating.GOOD) {
+      setSessionCorrect(sessionCorrect + 1);
+    }
+
+    onReview(currentCard.id, rating);
     setShowAnswer(false);
 
     if (currentIndex < flashcards.length - 1) {
@@ -51,6 +99,29 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
     } else {
       onFinish();
     }
+  };
+
+  const renderCardContent = () => {
+    if (currentCard.type === "cloze") {
+      return (
+        <div className="text-4xl font-bold text-slate-100 leading-relaxed px-8">
+          {showAnswer ? (
+            <div>
+              <div className="text-2xl text-slate-400 mb-4">Answer:</div>
+              <div className="text-green-400">{currentCard.back}</div>
+            </div>
+          ) : (
+            currentCard.front
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-4xl font-bold text-slate-100 leading-relaxed px-8">
+        {showAnswer ? currentCard.back : currentCard.front}
+      </div>
+    );
   };
 
   return (
@@ -63,20 +134,55 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-1 sm:mb-2">
                 🎯 Review Session
               </h2>
-              <p className="text-slate-400 text-sm sm:text-base lg:text-lg">Test your knowledge and strengthen your memory</p>
+              <p className="text-slate-400 text-sm sm:text-base lg:text-lg">
+                Using {settings.reviewAlgorithm} algorithm • Target:{" "}
+                {settings.retentionTarget}% retention
+              </p>
             </div>
             <div className="text-left sm:text-right">
               <div className="text-3xl sm:text-4xl font-bold text-slate-100">
                 {currentIndex + 1} / {flashcards.length}
               </div>
-              <div className="text-xs sm:text-sm text-slate-400 font-medium">Cards reviewed</div>
+              <div className="text-xs sm:text-sm text-slate-400 font-medium">
+                Cards reviewed
+              </div>
             </div>
           </div>
-          <div className="relative w-full bg-slate-800 rounded-full h-3 sm:h-4 overflow-hidden border border-slate-700">
+
+          {/* Session Progress */}
+          <div className="relative w-full bg-slate-800 rounded-full h-3 sm:h-4 overflow-hidden border border-slate-700 mb-3 sm:mb-4">
             <div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-500 ease-out shadow-lg shadow-purple-500/50"
               style={{ width: `${progress}%` }}
             />
+          </div>
+
+          {/* Daily Goal Progress */}
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-4">
+              <span className="text-slate-400">
+                Daily Goal:{" "}
+                <span className="text-indigo-400 font-bold">
+                  {totalReviewed}
+                </span>{" "}
+                / {settings.dailyGoal}
+              </span>
+              {streak > 0 && (
+                <span className="flex items-center gap-2 bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full font-bold">
+                  <span className="streak-fire">🔥</span>
+                  {streak} day streak
+                </span>
+              )}
+            </div>
+            <div className="text-slate-400">
+              Accuracy:{" "}
+              <span className="text-green-400 font-bold">
+                {currentIndex > 0
+                  ? Math.round((sessionCorrect / currentIndex) * 100)
+                  : 0}
+                %
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -85,19 +191,44 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10">
         <div className="max-w-4xl w-full">
           <div className="card p-6 sm:p-8 lg:p-12 min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] flex flex-col justify-between animate-scale-in border border-slate-700/50">
+            {/* Card Type Badge */}
+            <div className="mb-4">
+              <span className="inline-block px-4 py-2 bg-slate-700/50 text-slate-300 rounded-lg text-sm font-bold">
+                {currentCard.type === "cloze"
+                  ? "📝 Cloze Deletion"
+                  : "🎴 Basic Flashcard"}
+              </span>
+            </div>
+
             {/* Card Content */}
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center w-full">
-                <div className={`inline-block px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl sm:rounded-2xl mb-6 sm:mb-8 font-bold text-sm sm:text-base uppercase tracking-wider ${
-                  showAnswer
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/30'
-                    : 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-purple-500/30'
-                }`}>
-                  {showAnswer ? '✅ ANSWER' : '❓ QUESTION'}
+                <div
+                  className={`inline-block px-8 py-3 rounded-2xl mb-8 font-bold text-base uppercase tracking-wider ${
+                    showAnswer
+                      ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/30"
+                      : "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-purple-500/30"
+                  }`}
+                >
+                  {showAnswer ? "✅ ANSWER" : "❓ QUESTION"}
                 </div>
-                <div className="text-xl sm:text-2xl lg:text-4xl font-bold text-slate-100 leading-relaxed px-4 sm:px-8">
-                  {showAnswer ? currentCard.back : currentCard.front}
-                </div>
+                {renderCardContent()}
+
+                {/* Card Stats */}
+                {currentCard.repetitions > 0 && (
+                  <div className="mt-8 flex items-center justify-center gap-6 text-sm text-slate-400">
+                    <span>Reviewed: {currentCard.repetitions} times</span>
+                    {currentCard.interval > 0 && (
+                      <span>Interval: {currentCard.interval} days</span>
+                    )}
+                    {settings.reviewAlgorithm === "FSRS" &&
+                      currentCard.stability && (
+                        <span>
+                          Stability: {Math.round(currentCard.stability)} days
+                        </span>
+                      )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -117,36 +248,41 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <button
-                    onClick={() => handleReview(ReviewQuality.AGAIN)}
+                    onClick={() => handleReview(ReviewRating.AGAIN)}
                     className="py-4 sm:py-6 bg-gradient-to-br from-red-500 to-pink-600 text-white rounded-xl sm:rounded-2xl hover:from-red-600 hover:to-pink-700 transition-all font-bold shadow-xl shadow-red-500/30 hover:shadow-2xl hover:shadow-red-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
                   >
                     <span className="text-2xl sm:text-3xl">❌</span>
                     <span className="text-sm sm:text-base">Again</span>
+                    <span className="text-xs opacity-75">&lt;10m</span>
                   </button>
                   <button
-                    onClick={() => handleReview(ReviewQuality.HARD)}
+                    onClick={() => handleReview(ReviewRating.HARD)}
                     className="py-4 sm:py-6 bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-xl sm:rounded-2xl hover:from-orange-600 hover:to-amber-700 transition-all font-bold shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
                   >
                     <span className="text-2xl sm:text-3xl">😓</span>
                     <span className="text-sm sm:text-base">Hard</span>
+                    <span className="text-xs opacity-75">Difficult</span>
                   </button>
                   <button
-                    onClick={() => handleReview(ReviewQuality.GOOD)}
+                    onClick={() => handleReview(ReviewRating.GOOD)}
                     className="py-4 sm:py-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all font-bold shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
                   >
                     <span className="text-2xl sm:text-3xl">👍</span>
                     <span className="text-sm sm:text-base">Good</span>
+                    <span className="text-xs opacity-75">Optimal</span>
                   </button>
                   <button
-                    onClick={() => handleReview(ReviewQuality.EASY)}
+                    onClick={() => handleReview(ReviewRating.EASY)}
                     className="py-4 sm:py-6 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl sm:rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all font-bold shadow-xl shadow-green-500/30 hover:shadow-2xl hover:shadow-green-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
                   >
                     <span className="text-2xl sm:text-3xl">🎉</span>
                     <span className="text-sm sm:text-base">Easy</span>
+                    <span className="text-xs opacity-75">Perfect!</span>
                   </button>
                 </div>
-                <div className="text-xs sm:text-sm text-center text-slate-400 mt-3 sm:mt-4 font-medium">
-                  Your answer helps schedule the next review optimally
+                <div className="text-sm text-center text-slate-400 mt-4 font-medium">
+                  Your rating optimizes the next review schedule using{" "}
+                  {settings.reviewAlgorithm}
                 </div>
               </div>
             )}
@@ -157,14 +293,23 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
       {/* Footer Stats */}
       <div className="glass-card border-t border-slate-700/50 p-4 sm:p-6 m-4 sm:m-6 lg:m-8 mt-0 rounded-b-2xl sm:rounded-b-3xl">
         <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-sm sm:text-base text-slate-300 font-medium">
-          <span className="flex items-center gap-2 sm:gap-3">
-            <span className="text-lg sm:text-xl">📊</span> Progress: <span className="text-indigo-400 font-bold">{Math.round(progress)}%</span>
+          <span className="flex items-center gap-3">
+            <span className="text-xl">📊</span> Progress:{" "}
+            <span className="text-indigo-400 font-bold">
+              {Math.round(progress)}%
+            </span>
           </span>
-          <span className="flex items-center gap-2 sm:gap-3">
-            <span className="text-lg sm:text-xl">⏱️</span> <span className="text-purple-400 font-bold">{flashcards.length - currentIndex - 1}</span> remaining
+          <span className="flex items-center gap-3">
+            <span className="text-xl">⏱️</span>{" "}
+            <span className="text-purple-400 font-bold">
+              {flashcards.length - currentIndex - 1}
+            </span>{" "}
+            cards remaining
           </span>
-          <span className="flex items-center gap-2 sm:gap-3">
-            <span className="text-lg sm:text-xl">🔥</span> Keep going!
+          <span className="flex items-center gap-3">
+            <span className="text-xl">✨</span>{" "}
+            <span className="text-green-400 font-bold">{sessionCorrect}</span>{" "}
+            correct
           </span>
         </div>
       </div>
