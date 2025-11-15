@@ -16,6 +16,8 @@ interface SidebarProps {
   streak: number;
   dailyReviewed: number;
   onDeleteNote?: (noteId: string) => void;
+  isMobileOpen: boolean;
+  onCloseSidebar: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -31,6 +33,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   streak,
   dailyReviewed,
   onDeleteNote,
+  isMobileOpen,
+  onCloseSidebar,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
@@ -68,8 +72,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const handleViewChange = (view: "notes" | "flashcards" | "review" | "search" | "graph") => {
+    onChangeView(view);
+    onCloseSidebar();
+  };
+
+  const handleSelectNote = (noteId: string) => {
+    onSelectNote(noteId);
+    onCloseSidebar();
+  };
+
+  const handleNewNote = () => {
+    onNewNote();
+    onCloseSidebar();
+  };
+
   return (
-    <div className="w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col">
+    <div className={`
+      w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col
+      fixed lg:static inset-y-0 left-0 z-40
+      transform transition-transform duration-300 ease-out
+      ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
       {/* Header */}
       <div className="p-6 border-b border-slate-800 hover:border-slate-700 transition-all duration-300">
         <div className="flex items-center gap-3 mb-2 group cursor-default">
@@ -116,7 +140,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Navigation */}
       <div className="p-4 space-y-2 animate-fade-in">
         <button
-          onClick={() => onChangeView("notes")}
+          onClick={() => handleViewChange("notes")}
           className={`sidebar-item group ${currentView === "notes" ? "active" : ""}`}
         >
           <span className="text-xl group-hover:scale-125 transition-transform inline-block">
@@ -128,7 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </span>
         </button>
         <button
-          onClick={() => onChangeView("flashcards")}
+          onClick={() => handleViewChange("flashcards")}
           className={`sidebar-item group ${currentView === "flashcards" ? "active" : ""}`}
         >
           <span className="text-xl group-hover:scale-125 transition-transform inline-block">
@@ -140,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </span>
         </button>
         <button
-          onClick={() => onChangeView("review")}
+          onClick={() => handleViewChange("review")}
           className={`sidebar-item group ${currentView === "review" ? "active" : ""} justify-between`}
         >
           <div className="flex items-center gap-3">
@@ -156,7 +180,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </button>
         <button
-          onClick={() => onChangeView("search")}
+          onClick={() => handleViewChange("search")}
           className={`sidebar-item group ${currentView === "search" ? "active" : ""}`}
         >
           <span className="text-xl group-hover:scale-125 transition-transform inline-block">
@@ -189,7 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* New Note Button */}
           <div className="px-4 py-3">
             <button
-              onClick={onNewNote}
+              onClick={handleNewNote}
               className="btn-primary w-full flex items-center justify-center gap-2"
             >
               <span className="text-xl">✨</span>
@@ -258,7 +282,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     style={{ animationDelay: `${index * 30}ms` }}
                   >
                     <button
-                      onClick={() => onSelectNote(note.id)}
+                      onClick={() => handleSelectNote(note.id)}
                       className="w-full text-left px-4 py-3.5"
                     >
                       <div className="flex items-start gap-3">

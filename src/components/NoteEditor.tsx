@@ -138,19 +138,19 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
 
   if (!note && !title && !content) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 animate-fade-in">
-        <div className="text-center max-w-lg glass-card rounded-3xl p-16 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-500 hover:shadow-indigo-500/20">
-          <div className="text-7xl mb-8 animate-scale-in hover:scale-110 transition-transform duration-300 cursor-default">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 animate-fade-in">
+        <div className="text-center max-w-lg glass-card rounded-2xl sm:rounded-3xl p-8 sm:p-16 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-500 hover:shadow-indigo-500/20">
+          <div className="text-5xl sm:text-7xl mb-6 sm:mb-8 animate-scale-in hover:scale-110 transition-transform duration-300 cursor-default">
             ✍️
           </div>
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 hover:from-indigo-300 hover:via-purple-300 hover:to-pink-300 transition-all duration-300">
+          <h2 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4 sm:mb-6 hover:from-indigo-300 hover:via-purple-300 hover:to-pink-300 transition-all duration-300">
             Start Creating
           </h2>
-          <p className="text-slate-400 text-lg mb-8 leading-relaxed hover:text-slate-300 transition-colors">
+          <p className="text-slate-400 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed hover:text-slate-300 transition-colors">
             Select a note from the sidebar or create a new one to begin your
             learning journey
           </p>
-          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-2xl p-6 text-sm text-slate-300 border border-indigo-500/20 hover:border-indigo-500/40 hover:from-indigo-500/15 hover:to-purple-500/15 transition-all duration-300 group cursor-default">
+          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-xs sm:text-sm text-slate-300 border border-indigo-500/20 hover:border-indigo-500/40 hover:from-indigo-500/15 hover:to-purple-500/15 transition-all duration-300 group cursor-default">
             <div className="mb-4 font-semibold text-indigo-300">
               💡 Quick Syntax Guide:
             </div>
@@ -187,33 +187,37 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col animate-fade-in p-8">
-      <div className="glass-card rounded-3xl shadow-2xl flex flex-col h-full overflow-hidden hover:shadow-indigo-500/20 transition-all duration-500">
+    <div className="flex-1 flex flex-col animate-fade-in p-4 sm:p-6 lg:p-8">
+      <div className="glass-card rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col h-full overflow-hidden hover:shadow-indigo-500/20 transition-all duration-500">
         {/* Title Section */}
-        <div className="border-b border-slate-700/50 p-8 bg-gradient-to-r from-slate-800/50 to-slate-800/30 hover:from-slate-800/60 hover:to-slate-800/40 transition-all duration-300">
+        <div className="border-b border-slate-700/50 p-4 sm:p-6 lg:p-8 bg-gradient-to-r from-slate-800/50 to-slate-800/30 hover:from-slate-800/60 hover:to-slate-800/40 transition-all duration-300">
           <input
             type="text"
             placeholder="✨ Untitled Note"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-4xl font-bold outline-none bg-transparent placeholder-slate-500 text-slate-100 transition-all duration-200 focus:text-indigo-300"
+            className="w-full text-2xl sm:text-3xl lg:text-4xl font-bold outline-none bg-transparent placeholder-slate-500 text-slate-100 transition-all duration-200 focus:text-indigo-300"
           />
-          <div className="flex items-center gap-6 mt-4 text-sm text-slate-400 animate-fade-in flex-wrap">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-6 mt-3 sm:mt-4 text-xs sm:text-sm text-slate-400 animate-fade-in">
             <span className="flex items-center gap-2 font-medium hover:text-slate-300 transition-colors group">
               <span className="group-hover:scale-125 transition-transform inline-block">
                 📅
               </span>
-              {new Date().toLocaleDateString("en-US", {
+              <span className="hidden sm:inline">{new Date().toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
                 year: "numeric",
-              })}
+              })}</span>
+              <span className="sm:hidden">{new Date().toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}</span>
             </span>
             <span className="flex items-center gap-2 font-medium hover:text-slate-300 transition-colors group">
               <span className="group-hover:scale-125 transition-transform inline-block">
                 📊
               </span>
-              {content.length} characters
+              {content.length} <span className="hidden sm:inline">characters</span><span className="sm:hidden">chars</span>
             </span>
             {flashcardCount > 0 && (
               <span className="flex items-center gap-2 text-amber-400 font-semibold animate-slide-up hover:scale-105 transition-transform group">
@@ -243,7 +247,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         </div>
 
         {/* Toolbar */}
-        <div className="border-b border-slate-700/50 p-4 bg-slate-800/20 flex items-center gap-2 flex-wrap">
+        <div className="border-b border-slate-700/50 p-3 sm:p-4 bg-slate-800/20 flex items-center gap-2 flex-wrap">
           <button
             onClick={() => insertSyntax("flashcard")}
             className="px-3 py-2 bg-amber-500/20 text-amber-400 rounded-lg hover:bg-amber-500/30 transition-all text-sm font-medium flex items-center gap-2"
@@ -290,10 +294,10 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 p-8 overflow-hidden">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-hidden">
           {showPreview ? (
             <div
-              className="w-full h-full overflow-y-auto text-lg leading-relaxed text-slate-200"
+              className="w-full h-full overflow-y-auto text-base sm:text-lg leading-relaxed text-slate-200"
               dangerouslySetInnerHTML={{
                 __html: highlightSyntax(content).replace(/\n/g, "<br/>"),
               }}
@@ -309,19 +313,19 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
 • #tag - Add a tag"
               value={content}
               onChange={handleContentChange}
-              className="w-full h-full outline-none resize-none text-lg leading-relaxed text-slate-200 placeholder-slate-500 bg-transparent focus:placeholder-slate-600 transition-all duration-200"
+              className="w-full h-full outline-none resize-none text-base sm:text-lg leading-relaxed text-slate-200 placeholder-slate-500 bg-transparent focus:placeholder-slate-600 transition-all duration-200"
               style={{ fontFamily: "inherit" }}
             />
           )}
         </div>
 
         {/* Action Bar */}
-        <div className="border-t border-slate-700/50 p-8 bg-slate-800/30 hover:bg-slate-800/40 transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="border-t border-slate-700/50 p-4 sm:p-6 lg:p-8 bg-slate-800/30 hover:bg-slate-800/40 transition-all duration-300">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <button
                 onClick={handleSave}
-                className="btn-primary flex items-center gap-2 hover:scale-105 transition-transform duration-300"
+                className="btn-primary flex items-center justify-center gap-2 hover:scale-105 transition-transform duration-300"
               >
                 <span className="inline-block group-hover:scale-110">💾</span>
                 <span>Save Note</span>
@@ -329,10 +333,10 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
               {flashcardCount > 0 && (
                 <button
                   onClick={handleCreateFlashcards}
-                  className="btn-success flex items-center gap-2 animate-scale-in hover:scale-105 transition-transform duration-300"
+                  className="btn-success flex items-center justify-center gap-2 animate-scale-in hover:scale-105 transition-transform duration-300"
                 >
                   <span className="inline-block group-hover:rotate-12">🎯</span>
-                  <span>
+                  <span className="text-sm sm:text-base">
                     Generate {flashcardCount} Flashcard
                     {flashcardCount !== 1 ? "s" : ""}
                   </span>
@@ -341,7 +345,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             </div>
 
             {flashcardCount > 0 && (
-              <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-amber-500/30 animate-pulse hover:shadow-amber-500/50 hover:scale-105 transition-all duration-300 cursor-default">
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold shadow-lg shadow-amber-500/30 animate-pulse hover:shadow-amber-500/50 hover:scale-105 transition-all duration-300 cursor-default text-center text-sm sm:text-base">
                 ⚡ {flashcardCount} ready!
               </div>
             )}
