@@ -41,56 +41,88 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
   };
 
   return (
-    <div className="flex-1 bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Flashcards</h2>
+    <div className="flex-1 p-8 overflow-y-auto animate-fade-in">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">
+              🎴 Flashcards
+            </h2>
+            <p className="text-slate-400 text-lg">Master your knowledge with intelligent spaced repetition</p>
+          </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="btn-primary flex items-center gap-2"
           >
-            + New Flashcard
+            <span>✨</span>
+            <span>New Flashcard</span>
           </button>
         </div>
 
+        {/* Stats Bar */}
+        <div className="grid grid-cols-3 gap-6 mb-10">
+          <div className="glass-card rounded-2xl p-8 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
+            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📚</div>
+            <div className="text-3xl font-bold text-slate-100 mb-1">{flashcardsList.length}</div>
+            <div className="text-sm text-slate-400 font-medium">Total Cards</div>
+          </div>
+          <div className="glass-card rounded-2xl p-8 border border-green-500/20 hover:border-green-500/40 transition-all duration-300 group">
+            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">✅</div>
+            <div className="text-3xl font-bold text-slate-100 mb-1">
+              {flashcardsList.filter(f => f.repetitions > 0).length}
+            </div>
+            <div className="text-sm text-slate-400 font-medium">Reviewed</div>
+          </div>
+          <div className="glass-card rounded-2xl p-8 border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 group">
+            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🔥</div>
+            <div className="text-3xl font-bold text-slate-100 mb-1">
+              {flashcardsList.filter(f => f.nextReview <= Date.now()).length}
+            </div>
+            <div className="text-sm text-slate-400 font-medium">Due Today</div>
+          </div>
+        </div>
+
+        {/* Create Form */}
         {showForm && (
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h3 className="text-lg font-semibold mb-4">Create New Flashcard</h3>
-            <div className="space-y-4">
+          <div className="card mb-10 p-10 animate-slide-up border border-indigo-500/20">
+            <h3 className="text-3xl font-bold mb-8 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">✨ Create New Flashcard</h3>
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Front (Question)
+                <label className="block text-sm font-bold text-slate-300 mb-3 flex items-center gap-2">
+                  <span>🎯</span> Front (Question)
                 </label>
                 <input
                   type="text"
                   value={newFront}
                   onChange={(e) => setNewFront(e.target.value)}
-                  placeholder="Enter question"
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="What do you want to remember?"
+                  className="input-field text-base"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Back (Answer)
+                <label className="block text-sm font-bold text-slate-300 mb-3 flex items-center gap-2">
+                  <span>💡</span> Back (Answer)
                 </label>
                 <input
                   type="text"
                   value={newBack}
                   onChange={(e) => setNewBack(e.target.value)}
-                  placeholder="Enter answer"
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="The answer or explanation"
+                  className="input-field text-base"
                 />
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-4 pt-4">
                 <button
                   onClick={handleCreate}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                  className="btn-success flex items-center gap-2"
                 >
-                  Create
+                  <span>🎉</span>
+                  <span>Create Flashcard</span>
                 </button>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+                  className="btn-secondary"
                 >
                   Cancel
                 </button>
@@ -99,35 +131,68 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
           </div>
         )}
 
-        <div className="space-y-4">
+        {/* Flashcards List */}
+        <div className="space-y-5">
           {flashcardsList.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No flashcards yet. Create one or generate from notes!</p>
+            <div className="text-center py-24 glass-card rounded-3xl animate-scale-in border border-indigo-500/20">
+              <div className="text-7xl mb-8">🎴</div>
+              <h3 className="text-3xl font-bold text-slate-100 mb-4">No Flashcards Yet</h3>
+              <p className="text-slate-400 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+                Create flashcards manually or generate them from your notes using the <code className="bg-slate-800 text-amber-400 px-2 py-1 rounded font-mono text-sm">::</code> syntax
+              </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="btn-primary inline-flex items-center gap-2"
+              >
+                <span>✨</span>
+                <span>Create Your First Flashcard</span>
+              </button>
             </div>
           ) : (
-            flashcardsList.map((flashcard) => (
-              <div key={flashcard.id} className="bg-white p-6 rounded-lg shadow">
-                <div className="flex items-start justify-between">
+            flashcardsList.map((flashcard, index) => (
+              <div
+                key={flashcard.id}
+                className="card p-8 hover:scale-[1.01] transition-all duration-300 animate-slide-up border border-slate-700/50 hover:border-indigo-500/30"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="flex items-start justify-between gap-6">
                   <div className="flex-1">
-                    <div className="mb-4">
-                      <div className="text-sm text-gray-500 mb-1">Front</div>
-                      <div className="text-lg font-medium">{flashcard.front}</div>
+                    <div className="grid grid-cols-2 gap-6 mb-6">
+                      <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl p-6 border border-indigo-500/20">
+                        <div className="text-xs font-bold text-indigo-400 mb-3 flex items-center gap-2 uppercase tracking-wider">
+                          <span>❓</span> Question
+                        </div>
+                        <div className="text-xl font-semibold text-slate-100 leading-relaxed">{flashcard.front}</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20">
+                        <div className="text-xs font-bold text-green-400 mb-3 flex items-center gap-2 uppercase tracking-wider">
+                          <span>✅</span> Answer
+                        </div>
+                        <div className="text-xl font-medium text-slate-100 leading-relaxed">{flashcard.back}</div>
+                      </div>
                     </div>
-                    <div className="mb-4">
-                      <div className="text-sm text-gray-500 mb-1">Back</div>
-                      <div className="text-lg">{flashcard.back}</div>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span>Created: {formatDate(flashcard.createdAt)}</span>
-                      <span className="font-medium">{getDaysUntilReview(flashcard.nextReview)}</span>
-                      <span>Repetitions: {flashcard.repetitions}</span>
+                    <div className="flex items-center gap-8 text-sm">
+                      <span className="flex items-center gap-2 text-slate-400 font-medium">
+                        <span>📅</span> {formatDate(flashcard.createdAt)}
+                      </span>
+                      <span className={`flex items-center gap-2 font-bold px-4 py-2 rounded-xl ${
+                        flashcard.nextReview <= Date.now()
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      }`}>
+                        <span>⏰</span> {getDaysUntilReview(flashcard.nextReview)}
+                      </span>
+                      <span className="flex items-center gap-2 text-slate-400 font-medium">
+                        <span>🔁</span> {flashcard.repetitions} reviews
+                      </span>
                     </div>
                   </div>
                   <button
                     onClick={() => onDeleteFlashcard(flashcard.id)}
-                    className="text-red-500 hover:text-red-700 ml-4"
+                    className="btn-danger flex items-center gap-2"
                   >
-                    Delete
+                    <span>🗑️</span>
+                    <span>Delete</span>
                   </button>
                 </div>
               </div>
