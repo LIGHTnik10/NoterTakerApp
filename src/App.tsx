@@ -11,6 +11,7 @@ import { calculateNextReview, getFlashcardsDueForReview, ReviewQuality } from '.
 function App() {
   const [state, setState] = useState<AppState>(() => storage.loadState());
   const [isNewNote, setIsNewNote] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const selectedNote = state.selectedNoteId ? state.notes[state.selectedNoteId] : null;
   const flashcardsDue = getFlashcardsDueForReview(state.flashcards);
@@ -91,8 +92,39 @@ function App() {
     setState(prev => ({ ...prev, currentView: 'flashcards' }));
   };
 
+  const handleToggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleCloseSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex overflow-hidden">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={handleToggleSidebar}
+        className="lg:hidden fixed top-4 left-4 z-50 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-3 rounded-xl shadow-lg hover:scale-110 transition-transform duration-300"
+        aria-label="Toggle menu"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isSidebarOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"
+          onClick={handleCloseSidebar}
+        />
+      )}
+
       <Sidebar
         notes={state.notes}
         selectedNoteId={state.selectedNoteId}
@@ -101,6 +133,8 @@ function App() {
         onNewNote={handleNewNote}
         onChangeView={handleChangeView}
         flashcardsDueCount={flashcardsDue.length}
+        isMobileOpen={isSidebarOpen}
+        onCloseSidebar={handleCloseSidebar}
       />
 
       {state.currentView === 'notes' && (

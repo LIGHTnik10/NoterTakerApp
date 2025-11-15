@@ -41,19 +41,19 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
   };
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto animate-fade-in">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto animate-fade-in">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-10">
           <div>
-            <h2 className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 sm:mb-3">
               🎴 Flashcards
             </h2>
-            <p className="text-slate-400 text-lg">Master your knowledge with intelligent spaced repetition</p>
+            <p className="text-slate-400 text-sm sm:text-base lg:text-lg">Master your knowledge with intelligent spaced repetition</p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary flex items-center gap-2 w-full sm:w-auto justify-center"
           >
             <span>✨</span>
             <span>New Flashcard</span>
@@ -61,7 +61,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-10">
           <div className="glass-card rounded-2xl p-8 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
             <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📚</div>
             <div className="text-3xl font-bold text-slate-100 mb-1">{flashcardsList.length}</div>
@@ -152,30 +152,30 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
             flashcardsList.map((flashcard, index) => (
               <div
                 key={flashcard.id}
-                className="card p-8 hover:scale-[1.01] transition-all duration-300 animate-slide-up border border-slate-700/50 hover:border-indigo-500/30"
+                className="card p-4 sm:p-6 lg:p-8 hover:scale-[1.01] transition-all duration-300 animate-slide-up border border-slate-700/50 hover:border-indigo-500/30"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="grid grid-cols-2 gap-6 mb-6">
-                      <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl p-6 border border-indigo-500/20">
-                        <div className="text-xs font-bold text-indigo-400 mb-3 flex items-center gap-2 uppercase tracking-wider">
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-6">
+                  <div className="flex-1 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                      <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-indigo-500/20">
+                        <div className="text-xs font-bold text-indigo-400 mb-2 sm:mb-3 flex items-center gap-2 uppercase tracking-wider">
                           <span>❓</span> Question
                         </div>
-                        <div className="text-xl font-semibold text-slate-100 leading-relaxed">{flashcard.front}</div>
+                        <div className="text-base sm:text-lg lg:text-xl font-semibold text-slate-100 leading-relaxed">{flashcard.front}</div>
                       </div>
-                      <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20">
-                        <div className="text-xs font-bold text-green-400 mb-3 flex items-center gap-2 uppercase tracking-wider">
+                      <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-green-500/20">
+                        <div className="text-xs font-bold text-green-400 mb-2 sm:mb-3 flex items-center gap-2 uppercase tracking-wider">
                           <span>✅</span> Answer
                         </div>
-                        <div className="text-xl font-medium text-slate-100 leading-relaxed">{flashcard.back}</div>
+                        <div className="text-base sm:text-lg lg:text-xl font-medium text-slate-100 leading-relaxed">{flashcard.back}</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-8 text-sm">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-8 text-xs sm:text-sm">
                       <span className="flex items-center gap-2 text-slate-400 font-medium">
                         <span>📅</span> {formatDate(flashcard.createdAt)}
                       </span>
-                      <span className={`flex items-center gap-2 font-bold px-4 py-2 rounded-xl ${
+                      <span className={`flex items-center gap-2 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl ${
                         flashcard.nextReview <= Date.now()
                           ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                           : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
@@ -189,7 +189,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
                   </div>
                   <button
                     onClick={() => onDeleteFlashcard(flashcard.id)}
-                    className="btn-danger flex items-center gap-2"
+                    className="btn-danger flex items-center gap-2 w-full lg:w-auto justify-center"
                   >
                     <span>🗑️</span>
                     <span>Delete</span>

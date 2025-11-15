@@ -9,6 +9,8 @@ interface SidebarProps {
   onNewNote: () => void;
   onChangeView: (view: 'notes' | 'flashcards' | 'review') => void;
   flashcardsDueCount: number;
+  isMobileOpen: boolean;
+  onCloseSidebar: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -19,11 +21,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNewNote,
   onChangeView,
   flashcardsDueCount,
+  isMobileOpen,
+  onCloseSidebar,
 }) => {
   const notesList = Object.values(notes).sort((a, b) => b.updatedAt - a.updatedAt);
 
+  const handleViewChange = (view: 'notes' | 'flashcards' | 'review') => {
+    onChangeView(view);
+    onCloseSidebar();
+  };
+
+  const handleSelectNote = (noteId: string) => {
+    onSelectNote(noteId);
+    onCloseSidebar();
+  };
+
+  const handleNewNote = () => {
+    onNewNote();
+    onCloseSidebar();
+  };
+
   return (
-    <div className="w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col">
+    <div className={`
+      w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col
+      fixed lg:static inset-y-0 left-0 z-40
+      transform transition-transform duration-300 ease-out
+      ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
       {/* Header */}
       <div className="p-6 border-b border-slate-800 hover:border-slate-700 transition-all duration-300">
         <div className="flex items-center gap-3 mb-2 group cursor-default">
@@ -42,21 +66,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Navigation */}
       <div className="p-4 space-y-2 animate-fade-in">
         <button
-          onClick={() => onChangeView('notes')}
+          onClick={() => handleViewChange('notes')}
           className={`sidebar-item group ${currentView === 'notes' ? 'active' : ''}`}
         >
           <span className="text-xl group-hover:scale-125 transition-transform inline-block">📝</span>
           <span>Notes</span>
         </button>
         <button
-          onClick={() => onChangeView('flashcards')}
+          onClick={() => handleViewChange('flashcards')}
           className={`sidebar-item group ${currentView === 'flashcards' ? 'active' : ''}`}
         >
           <span className="text-xl group-hover:scale-125 transition-transform inline-block">🎴</span>
           <span>Flashcards</span>
         </button>
         <button
-          onClick={() => onChangeView('review')}
+          onClick={() => handleViewChange('review')}
           className={`sidebar-item group ${currentView === 'review' ? 'active' : ''} justify-between`}
         >
           <div className="flex items-center gap-3">
@@ -76,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* New Note Button */}
           <div className="px-4 py-3">
             <button
-              onClick={onNewNote}
+              onClick={handleNewNote}
               className="btn-primary w-full flex items-center justify-center gap-2"
             >
               <span className="text-xl">✨</span>
@@ -100,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 notesList.map((note, index) => (
                   <button
                     key={note.id}
-                    onClick={() => onSelectNote(note.id)}
+                    onClick={() => handleSelectNote(note.id)}
                     className={`w-full text-left px-4 py-3.5 rounded-xl transition-all duration-300 group animate-slide-up ${
                       selectedNoteId === note.id
                         ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 shadow-lg ring-2 ring-indigo-500/30 hover:ring-indigo-500/50'
