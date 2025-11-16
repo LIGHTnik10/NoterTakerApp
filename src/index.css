@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-overflow-scrolling: touch;
+    }
+
     body {
         margin: 0;
         font-family:
@@ -17,6 +22,16 @@
         -moz-osx-font-smoothing: grayscale;
         background: #0f172a;
         color: #e2e8f0;
+        -webkit-text-size-adjust: 100%;
+        -webkit-touch-callout: none;
+        touch-action: manipulation;
+        font-size: 16px; /* Prevent zoom on input focus in iOS */
+    }
+
+    @media (max-width: 374px) {
+        body {
+            font-size: 15px; /* Slightly smaller on very small screens */
+        }
     }
 
     code {
@@ -58,6 +73,15 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    min-height: 44px;
+}
+
+@media (max-width: 1023px) {
+    .btn-primary {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        min-height: 48px;
+    }
 }
 
 .btn-primary::before {
@@ -96,6 +120,15 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(148, 163, 184, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+}
+
+@media (max-width: 1023px) {
+    .btn-secondary {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        min-height: 48px;
+    }
 }
 
 .btn-secondary:hover {
@@ -114,6 +147,15 @@
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+}
+
+@media (max-width: 1023px) {
+    .btn-success {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        min-height: 48px;
+    }
 }
 
 .btn-success:hover {
@@ -179,7 +221,7 @@
 .sidebar-item {
     width: 100%;
     text-align: left;
-    padding: 0.875rem 1.25rem;
+    padding: 1rem 1.25rem;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -187,6 +229,15 @@
     gap: 0.875rem;
     font-weight: 500;
     font-size: 0.9375rem;
+    min-height: 44px; /* Minimum touch target size */
+}
+
+@media (max-width: 1023px) {
+    .sidebar-item {
+        padding: 1.125rem 1.25rem;
+        font-size: 1rem;
+        min-height: 48px;
+    }
 }
 
 .sidebar-item:hover {

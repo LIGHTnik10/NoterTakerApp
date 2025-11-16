@@ -192,17 +192,17 @@ function App() {
 
   return (
     <div className="h-screen flex overflow-hidden">
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Larger touch target */}
       <button
         onClick={handleToggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-3 rounded-xl shadow-lg hover:scale-110 transition-transform duration-300"
+        className="lg:hidden fixed top-2 left-2 z-50 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-4 rounded-2xl shadow-2xl active:scale-95 transition-transform duration-200"
         aria-label="Toggle menu"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
           {isSidebarOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           )}
         </svg>
       </button>
@@ -210,7 +210,7 @@ function App() {
       {/* Sidebar Overlay for Mobile */}
       {isSidebarOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 animate-fade-in"
           onClick={handleCloseSidebar}
         />
       )}

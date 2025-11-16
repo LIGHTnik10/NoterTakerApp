@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className={`
-      w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col
+      w-[85vw] max-w-[320px] lg:w-80 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col
       fixed lg:static inset-y-0 left-0 z-40
       transform transition-transform duration-300 ease-out
       ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -228,7 +228,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search notes..."
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500 transition-all"
+              className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-base text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500 transition-all"
             />
           </div>
 
@@ -236,7 +236,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="px-4 pb-3 flex gap-2">
             <button
               onClick={() => setShowFavorites(!showFavorites)}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-all min-h-[44px] ${
                 showFavorites
                   ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700"
@@ -283,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     <button
                       onClick={() => handleSelectNote(note.id)}
-                      className="w-full text-left px-4 py-3.5"
+                      className="w-full text-left px-4 py-4 min-h-[52px]"
                     >
                       <div className="flex items-start gap-3">
                         <span className="text-xl mt-0.5 opacity-70 group-hover:opacity-100 group-hover:scale-125 transition-all inline-block">

@@ -236,7 +236,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
             {!showAnswer ? (
               <button
                 onClick={() => setShowAnswer(true)}
-                className="w-full py-4 sm:py-5 lg:py-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-xl sm:rounded-2xl hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all text-lg sm:text-xl lg:text-2xl font-bold shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transform hover:-translate-y-2 flex items-center justify-center gap-3 sm:gap-4"
+                className="w-full py-5 sm:py-5 lg:py-6 min-h-[56px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-xl sm:rounded-2xl active:scale-[0.98] transition-all text-lg sm:text-xl lg:text-2xl font-bold shadow-2xl shadow-purple-500/40 flex items-center justify-center gap-3 sm:gap-4"
               >
                 <span className="text-2xl sm:text-3xl">👁️</span>
                 <span>Show Answer</span>
@@ -249,34 +249,34 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <button
                     onClick={() => handleReview(ReviewRating.AGAIN)}
-                    className="py-4 sm:py-6 bg-gradient-to-br from-red-500 to-pink-600 text-white rounded-xl sm:rounded-2xl hover:from-red-600 hover:to-pink-700 transition-all font-bold shadow-xl shadow-red-500/30 hover:shadow-2xl hover:shadow-red-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
+                    className="py-5 sm:py-6 min-h-[88px] sm:min-h-[96px] bg-gradient-to-br from-red-500 to-pink-600 text-white rounded-xl sm:rounded-2xl active:scale-95 transition-all font-bold shadow-xl shadow-red-500/30 hover:shadow-2xl hover:shadow-red-500/50 flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-2xl sm:text-3xl">❌</span>
-                    <span className="text-sm sm:text-base">Again</span>
+                    <span className="text-3xl sm:text-3xl">❌</span>
+                    <span className="text-base sm:text-base">Again</span>
                     <span className="text-xs opacity-75">&lt;10m</span>
                   </button>
                   <button
                     onClick={() => handleReview(ReviewRating.HARD)}
-                    className="py-4 sm:py-6 bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-xl sm:rounded-2xl hover:from-orange-600 hover:to-amber-700 transition-all font-bold shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
+                    className="py-5 sm:py-6 min-h-[88px] sm:min-h-[96px] bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-xl sm:rounded-2xl active:scale-95 transition-all font-bold shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/50 flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-2xl sm:text-3xl">😓</span>
-                    <span className="text-sm sm:text-base">Hard</span>
+                    <span className="text-3xl sm:text-3xl">😓</span>
+                    <span className="text-base sm:text-base">Hard</span>
                     <span className="text-xs opacity-75">Difficult</span>
                   </button>
                   <button
                     onClick={() => handleReview(ReviewRating.GOOD)}
-                    className="py-4 sm:py-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all font-bold shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
+                    className="py-5 sm:py-6 min-h-[88px] sm:min-h-[96px] bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl active:scale-95 transition-all font-bold shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/50 flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-2xl sm:text-3xl">👍</span>
-                    <span className="text-sm sm:text-base">Good</span>
+                    <span className="text-3xl sm:text-3xl">👍</span>
+                    <span className="text-base sm:text-base">Good</span>
                     <span className="text-xs opacity-75">Optimal</span>
                   </button>
                   <button
                     onClick={() => handleReview(ReviewRating.EASY)}
-                    className="py-4 sm:py-6 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl sm:rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all font-bold shadow-xl shadow-green-500/30 hover:shadow-2xl hover:shadow-green-500/50 transform hover:-translate-y-2 flex flex-col items-center gap-2"
+                    className="py-5 sm:py-6 min-h-[88px] sm:min-h-[96px] bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl sm:rounded-2xl active:scale-95 transition-all font-bold shadow-xl shadow-green-500/30 hover:shadow-2xl hover:shadow-green-500/50 flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-2xl sm:text-3xl">🎉</span>
-                    <span className="text-sm sm:text-base">Easy</span>
+                    <span className="text-3xl sm:text-3xl">🎉</span>
+                    <span className="text-base sm:text-base">Easy</span>
                     <span className="text-xs opacity-75">Perfect!</span>
                   </button>
                 </div>
